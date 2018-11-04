@@ -15,6 +15,9 @@ import java.security.acl.Group;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.sun.glass.ui.ClipboardAssistance;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -44,7 +47,9 @@ import javafx.stage.StageStyle;
 public class NewController extends Application implements Initializable {
 	
 	@FXML
-	private TextArea textarea;
+	private ClassRegister classRegister;
+	@FXML
+	private TextArea textarea = null;
 	
 	@FXML
 	private javafx.scene.control.Button start, deregister, Add, Remove ;
@@ -71,9 +76,14 @@ public class NewController extends Application implements Initializable {
 	private javafx.scene.control.TextField ContactUsername, ContactURI;
 
 	@FXML
-	private void setTextArea(String string)
+	public String getUsername()
 	{
-		textarea.setText(string +"\n");
+		return username.getText();
+	}
+	@FXML
+	public void setTextArea(String string)
+	{
+		textarea.appendText(string);
 	}
 
 	@FXML
@@ -114,10 +124,15 @@ public class NewController extends Application implements Initializable {
 	}
 	
 	@FXML
-	private void handleButtonStart(ActionEvent event) throws Exception { // run button Start
+	private void handleButtonStart(ActionEvent event) throws Exception { // run button Start --> gui dang ki
 		
-		if((username.getText().equals("Luan") && password.getText().equals("123")) || (username.getText().equals("Tien") && password.getText().equals("456")))
+		this.classRegister = new ClassRegister(this);
+		classRegister.sendRequest("REGISTER");
+		
+		if(classRegister.info == "REGISTER")
 		{
+			classRegister = new ClassRegister(this);
+			classRegister.sendRequest("REGISTER");
 			//an form hien tai
 			Stage stage1 = (Stage)start.getScene().getWindow();
 			stage1.close();
